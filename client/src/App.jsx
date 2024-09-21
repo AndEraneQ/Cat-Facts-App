@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import { fromEvent, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import Grid from './components/Grid';
+import Header from './components/Header';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [catFacts, setCatFacts] = useState(Array(6).fill(null));
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    let index = 0;
 
-export default App
+    useEffect(() => {
+        const eventSource = new EventSource('http://localhost:8080/cat-facts');
+        
+        const catFacts$ = fromEvent(eventSource, 'message').pipe(
+            map(event => {
+                const data = JSON.parse(event.data);
+                console.log('Otrzymane dane z serwera:', data);
+                return { user: data.user, fact: data.fact };
+            }),
+            catchError(error => {
+                console.error('Błąd podczas odbierania danych:', error);
+                return of(null);
+            })
+        );
+
+        const subscription = catFacts$.subscribe(newData => {
+            if (newData) {
+                setCatFacts(prevCatFacts => {
+                    const updatedCatFacts = [...prevCatFacts];
+                    updatedCatFacts[index] = newData;
+                    index = (index+1)%6
+                    return updatedCatFacts;
+                });
+            }
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            eventSource.close();
+        };
+    }, []);
+
+    return (
+        <div>
+            <Header/>
+            <Grid catFacts={catFacts} />
+        </div>
+    );
+};
+
+export default App;

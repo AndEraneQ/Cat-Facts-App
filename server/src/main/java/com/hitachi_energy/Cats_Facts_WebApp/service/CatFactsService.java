@@ -20,20 +20,21 @@ import java.time.Duration;
 public class CatFactsService implements ICatFactsService{
 
     private static final Logger logger = LoggerFactory.getLogger(CatFactsService.class);
+    private static final Duration FACT_FETCH_INTERVAL = Duration.ofSeconds(10);
 
     private final CatFactFetcher catFactFetcher;
     private final UserFetcher userFetcher;
 
     @Override
     public Flux<UserCatFactDto> fetchCatFacts() {
-        return Flux.interval(Duration.ofSeconds(10))
+        return Flux.interval(FACT_FETCH_INTERVAL)
                 .flatMap(tick -> Mono.zip(
                         catFactFetcher.fetchRandomCatFact(),
                         userFetcher.fetchRandomUser()
                 ))
                 .map(tuple -> {
-                    User user = tuple.getT2();
                     Fact fact = tuple.getT1();
+                    User user = tuple.getT2();
                     logger.info("Fetched fact: '{}' by user: '{}'", fact.getDescription(), user.getName());
                     return UserCatFactMapper.INSTANCE.toUserCatFactDTO(user, fact);
                 });
