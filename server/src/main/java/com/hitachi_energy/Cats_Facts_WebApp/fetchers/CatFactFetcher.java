@@ -1,14 +1,15 @@
 package com.hitachi_energy.Cats_Facts_WebApp.fetchers;
 
 import com.hitachi_energy.Cats_Facts_WebApp.dto.CatFactResponse;
+import com.hitachi_energy.Cats_Facts_WebApp.mapper.CatFactResponseMapper;
 import com.hitachi_energy.Cats_Facts_WebApp.models.Fact;
+import com.hitachi_energy.Cats_Facts_WebApp.utils.FactUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 
 @Component
 public class CatFactFetcher implements ICatFactFetcher {
@@ -26,11 +27,9 @@ public class CatFactFetcher implements ICatFactFetcher {
                 .uri("/facts/random")
                 .retrieve()
                 .bodyToMono(CatFactResponse.class)
-                .map(catFactResponse -> new Fact(catFactResponse.getText()))
-                .onErrorResume(e -> {
-                        logger.error("Failed to fetch cat fact: {}", e.getMessage());
-                        return Mono.just(new Fact("Unknown fact"));
-                    }
-                );
+                .map(CatFactResponseMapper.INSTANCE::toFact)
+                .doOnSuccess(fact -> logger.info("Fetched cat fact: {}", fact.getDescription()))
+                .doOnError(e -> logger.error("Error occurred while fetching cat fact: {}", e.getMessage()))
+                .onErrorReturn(new Fact(FactUtils.UNKNOWN_FACT));
     }
 }

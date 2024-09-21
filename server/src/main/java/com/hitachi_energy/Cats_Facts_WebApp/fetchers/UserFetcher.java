@@ -1,7 +1,9 @@
 package com.hitachi_energy.Cats_Facts_WebApp.fetchers;
 
 import com.hitachi_energy.Cats_Facts_WebApp.dto.UserResponse;
+import com.hitachi_energy.Cats_Facts_WebApp.mapper.UserResponseMapper;
 import com.hitachi_energy.Cats_Facts_WebApp.models.User;
+import com.hitachi_energy.Cats_Facts_WebApp.utils.UserUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,25 +31,9 @@ public class UserFetcher implements IUserFetcher {
                 .uri("/api")
                 .retrieve()
                 .bodyToMono(UserResponse.class)
-                .flatMap(this::processUserResponse)
-                .onErrorResume(e -> {
-                    logger.error("Failed to fetch user: {}", e.getMessage());
-                    return Mono.just(new User("Unknown User"));
-                });
-    }
-
-    private Mono<User> processUserResponse(UserResponse response) {
-        List<UserResponse.Result> results = response.getResults();
-        if (results.isEmpty()) {
-            logger.warn("No users found in response");
-            return Mono.just(new User("Unknown User"));
-        }
-        UserResponse.Result.Name name = results.get(0).getName();
-        String fullName = createFullUserName(name.getFirst(), name.getLast());
-        return Mono.just(new User(fullName));
-    }
-
-    private String createFullUserName(String firstName, String lastName) {
-        return firstName + " " + lastName;
+                .map(UserResponseMapper.INSTANCE::toUser)
+                .doOnSuccess(user -> logger.info("Fetched user: {}", user.getName()))
+                .doOnError(e -> logger.error("Error fetching user: {}", e.getMessage()))
+                .onErrorReturn(new User(UserUtils.UNKNOWN_USER));
     }
 }

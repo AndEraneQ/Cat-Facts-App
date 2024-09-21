@@ -1,9 +1,9 @@
 package com.hitachi_energy.Cats_Facts_WebApp.service;
 
-import com.hitachi_energy.Cats_Facts_WebApp.dto.CatFactDto;
+import com.hitachi_energy.Cats_Facts_WebApp.dto.UserCatFactDto;
 import com.hitachi_energy.Cats_Facts_WebApp.fetchers.CatFactFetcher;
 import com.hitachi_energy.Cats_Facts_WebApp.fetchers.UserFetcher;
-import com.hitachi_energy.Cats_Facts_WebApp.mapper.CatFactMapper;
+import com.hitachi_energy.Cats_Facts_WebApp.mapper.UserCatFactMapper;
 import com.hitachi_energy.Cats_Facts_WebApp.models.Fact;
 import com.hitachi_energy.Cats_Facts_WebApp.models.User;
 import lombok.AllArgsConstructor;
@@ -23,10 +23,9 @@ public class CatFactsService implements ICatFactsService{
 
     private final CatFactFetcher catFactFetcher;
     private final UserFetcher userFetcher;
-    private final CatFactMapper catFactMapper;
 
     @Override
-    public Flux<CatFactDto> fetchCatFacts() {
+    public Flux<UserCatFactDto> fetchCatFacts() {
         return Flux.interval(Duration.ofSeconds(10))
                 .flatMap(tick -> Mono.zip(
                         catFactFetcher.fetchRandomCatFact(),
@@ -36,7 +35,7 @@ public class CatFactsService implements ICatFactsService{
                     User user = tuple.getT2();
                     Fact fact = tuple.getT1();
                     logger.info("Fetched fact: '{}' by user: '{}'", fact.getDescription(), user.getName());
-                    return catFactMapper.toCatFactDTO(user, fact);
+                    return UserCatFactMapper.INSTANCE.toUserCatFactDTO(user, fact);
                 });
     }
 }
