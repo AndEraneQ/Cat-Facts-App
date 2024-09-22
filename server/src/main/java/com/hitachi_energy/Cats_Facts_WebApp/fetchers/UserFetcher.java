@@ -34,6 +34,10 @@ public class UserFetcher implements IUserFetcher {
                 .map(UserResponseMapper.INSTANCE::toUser)
                 .doOnSuccess(user -> logger.info("Fetched user: {}", user.getName()))
                 .doOnError(e -> logger.error("Error fetching user: {}", e.getMessage()))
-                .onErrorReturn(new User(UserUtils.UNKNOWN_USER));
+                .onErrorResume(e -> {
+                    // Instead of returning UNKNOWN_USER, you could log this as well
+                    logger.error("Returning UNKNOWN_USER due to fetch error", e);
+                    return Mono.just(new User(UserUtils.UNKNOWN_USER));
+                });
     }
 }

@@ -1,0 +1,13 @@
+.headerContainer{
+    color: rgb(82 82 91);
+    font-size: 20px;
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+    min-width: 300px;
+
+}
+
+.headerText{
+    width: 100%;
+}

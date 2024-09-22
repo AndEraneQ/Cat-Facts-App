@@ -1,0 +1,62 @@
+.load {
+    margin: 10px auto;
+    width: 300px;
+    height: 36px;
+    position: relative;
+    overflow: visible;
+    user-select: none;
+    cursor: default;
+  }
+  
+  .loader {
+    position: absolute;
+    width: 20px;
+    height: 36px;
+    opacity: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    animation: move 2s linear infinite;
+    color: #3f3f3f;
+    transform: rotate(180deg);
+  }
+  
+  .loader:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .loader:nth-child(3) {
+    animation-delay: 0.35s;
+  }
+  .loader:nth-child(4) {
+    animation-delay: 0.55s;
+  }
+  .loader:nth-child(5) {
+    animation-delay: 0.75s;
+  }
+  .loader:nth-child(6) {
+    animation-delay: 0.95s;
+  }
+  .loader:nth-child(7) {
+    animation-delay: 1.1s;
+  }
+  
+  @keyframes move {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    35% {
+      left: 41%;
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    65% {
+      left: 59%;
+      transform: rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      transform: rotate(-180deg);
+      opacity: 0;
+    }
+  }
+  

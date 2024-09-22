@@ -1,50 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { fromEvent, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 import Grid from './components/Grid';
 import Header from './components/Header';
+import Loading from './components/Loading';
+import styles from './App.module.css';
+import CatFactsService from './service/CatFactsService';
+
+const API_URL = 'http://localhost:8080/cat-facts';
 
 const App = () => {
     const [catFacts, setCatFacts] = useState(Array(6).fill(null));
-
+    const [animatedIndex, setAnimatedIndex] = useState(null);
+    const catFactsService = new CatFactsService(API_URL);
+    const hasValidFacts = catFacts.some(catFact => catFact !== null);
     let index = 0;
 
     useEffect(() => {
-        const eventSource = new EventSource('http://localhost:8080/cat-facts');
-        
-        const catFacts$ = fromEvent(eventSource, 'message').pipe(
-            map(event => {
-                const data = JSON.parse(event.data);
-                console.log('Otrzymane dane z serwera:', data);
-                return { user: data.user, fact: data.fact };
-            }),
-            catchError(error => {
-                console.error('Błąd podczas odbierania danych:', error);
-                return of(null);
-            })
-        );
-
+        const catFacts$ = catFactsService.initialize();
         const subscription = catFacts$.subscribe(newData => {
             if (newData) {
                 setCatFacts(prevCatFacts => {
                     const updatedCatFacts = [...prevCatFacts];
                     updatedCatFacts[index] = newData;
-                    index = (index+1)%6
                     return updatedCatFacts;
                 });
+
+                setAnimatedIndex(index);
+                index = (index + 1) % 6;
             }
         });
 
         return () => {
             subscription.unsubscribe();
-            eventSource.close();
+            catFactsService.close();
         };
     }, []);
 
     return (
-        <div>
-            <Header/>
-            <Grid catFacts={catFacts} />
+        <div className={`${styles.appContainer}`}>
+            <Header />
+            {hasValidFacts ? <Grid catFacts={catFacts} animatedIndex={animatedIndex} /> : <Loading />}
         </div>
     );
 };

@@ -1,14 +1,19 @@
 import React from 'react';
 import Card from './Card';
-import './Grid.css';
+import styles from './Grid.module.css';
 
-const Grid = ({ catFacts }) => {
+const Grid = ({ catFacts, animatedIndex }) => {
   return (
-    <div className="grid-container">
+    <div className={`${styles.gridContainer}`}>
       {catFacts.map((catFact, index) => (
-        catFact && Object.keys(catFact).length > 0 && (
-            <Card key={index} author={catFact.user} fact={catFact.fact} />
-          )
+        catFact !== null && (
+          <Card 
+            key={index} 
+            author={catFact.user} 
+            fact={catFact.fact} 
+            isAnimating={animatedIndex === index} 
+          />
+        )
       ))}
     </div>
   );
