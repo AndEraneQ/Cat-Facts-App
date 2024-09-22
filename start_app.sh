@@ -28,7 +28,4 @@ echo "Starting React application..."
 (cd client && npm run dev) &
 sleep 5
 
-echo "Opening browser..."
-start http://localhost:5173
-
 wait
