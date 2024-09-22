@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Grid from './components/Grid';
 import Header from './components/Header';
 import Loading from './components/Loading';
@@ -12,20 +12,20 @@ const App = () => {
     const [animatedIndex, setAnimatedIndex] = useState(null);
     const catFactsService = new CatFactsService(API_URL);
     const hasValidFacts = catFacts.some(catFact => catFact !== null);
-    let index = 0;
+    const indexRef = useRef(0);
 
     useEffect(() => {
-        const catFacts$ = catFactsService.initialize();
-        const subscription = catFacts$.subscribe(newData => {
+        const catFactsStream$ = catFactsService.initialize();
+        const subscription = catFactsStream$.subscribe(newData => {
             if (newData) {
                 setCatFacts(prevCatFacts => {
                     const updatedCatFacts = [...prevCatFacts];
-                    updatedCatFacts[index] = newData;
+                    updatedCatFacts[indexRef.current] = newData;
                     return updatedCatFacts;
                 });
 
-                setAnimatedIndex(index);
-                index = (index + 1) % 6;
+                setAnimatedIndex(indexRef.current);
+                indexRef.current = (indexRef.current + 1) % 6;
             }
         });
 
@@ -36,7 +36,7 @@ const App = () => {
     }, []);
 
     return (
-        <div className={`${styles.appContainer}`}>
+        <div className={styles.appContainer}>
             <Header />
             {hasValidFacts ? <Grid catFacts={catFacts} animatedIndex={animatedIndex} /> : <Loading />}
         </div>
