@@ -10,10 +10,8 @@ class CatFactsService {
     initialize() {
         this.eventSource = new EventSource(this.url);
         
-        // Dodaj obsługę błędów dla EventSource
         this.eventSource.onerror = (error) => {
             console.error('EventSource failed:', error);
-            //this.close(); // Zakończ połączenie przy błędzie
         };
 
         return fromEvent(this.eventSource, 'message').pipe(

@@ -9,7 +9,7 @@ public class UserUtils {
         if (userResponse == null || userResponse.getResults() == null || userResponse.getResults().isEmpty()) {
             return UNKNOWN_USER;
         }
-        UserResponse.Result result = userResponse.getResults().getFirst();
+        UserResponse.Result result = userResponse.getResults().get(0);
         return result.getName().getFirst() + " " + result.getName().getLast();
     }
 }
