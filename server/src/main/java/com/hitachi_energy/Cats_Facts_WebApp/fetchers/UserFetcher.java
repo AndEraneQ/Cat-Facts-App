@@ -7,25 +7,27 @@ import com.hitachi_energy.Cats_Facts_WebApp.utils.UserUtils;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-@AllArgsConstructor
 public class UserFetcher implements IUserFetcher {
 
     private static final Logger logger = LoggerFactory.getLogger(UserFetcher.class);
 
-    private final WebClient webClient;
+    private final WebClient userWebClient;
 
-    public static UserFetcher create(WebClient.Builder webClientBuilder) {
-        return new UserFetcher(webClientBuilder.baseUrl("https://randomuser.me").build());
+    @Autowired
+    public UserFetcher(@Qualifier("userWebClient") WebClient userWebClient) {
+        this.userWebClient = userWebClient;
     }
 
     @Override
     public Mono<User> fetchRandomUser() {
-        return webClient.get()
+        return userWebClient.get()
                 .uri("/api")
                 .retrieve()
                 .bodyToMono(UserResponse.class)

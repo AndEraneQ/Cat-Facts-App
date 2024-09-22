@@ -43,7 +43,6 @@ class UserFetcherTest {
         when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        userFetcher = UserFetcher.create(webClientBuilder);
     }
 
     @Test

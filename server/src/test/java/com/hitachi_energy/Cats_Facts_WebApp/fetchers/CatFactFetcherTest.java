@@ -43,7 +43,6 @@ class CatFactFetcherTest {
         when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
         when(webClientBuilder.build()).thenReturn(webClient);
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        catFactFetcher = CatFactFetcher.create(webClientBuilder);
     }
 
     @Test
