@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cleanup() {
-  echo "Stopping applications..."
+  echo "Stopping application..."
   sleep 2
 
   for pid in $(ps aux | grep '[j]ava' | awk '{print $2}'); do
