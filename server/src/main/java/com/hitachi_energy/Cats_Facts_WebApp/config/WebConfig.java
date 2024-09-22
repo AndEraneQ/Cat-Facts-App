@@ -11,7 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/cat-facts")
                 .allowedOrigins("http://localhost:5173")
-                .allowedMethods("GET")
-                .allowedHeaders("*");
+                .allowedMethods("GET");
     }
 }
