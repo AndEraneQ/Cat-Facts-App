@@ -1,45 +1,34 @@
-# Hitachi Energy Recruitment Task
+# Hitachi Energy Recruitment Task - Cat Facts WebApp
+
 ## Description
-This project is a Cat Facts WebApp designed to showcase both front-end and back-end development skills.
-The application fetches random cat facts from public APIs and presents them in a responsive web interface.
-The back-end service retrieves cat facts and associates them with random users, providing a seamless experience through server-sent events.
+This project is a **Cat Facts WebApp** designed to showcase both front-end and back-end development skills. The application fetches random cat facts from public APIs and presents them in a responsive web interface. The back-end service retrieves cat facts and associates them with random users, providing a seamless experience through **Server-Sent Events (SSE)**.
 
 ## Video
-*This [Video](https://www.youtube.com/watch?v=sGy54tnophs) demonstrates the entire Cat Facts WebApp in action!*
+*Watch this [video](https://www.youtube.com/watch?v=sGy54tnophs) to see the Cat Facts WebApp in action, demonstrating its full functionality and user interface.*
 
 ## Screenshot
-*This is how the application looks.*
+*Below is a screenshot showing the current layout and design of the Cat Facts WebApp.*
 
-![Cat Facts WebApp Screenshot](readme-utils/AppScreen.png) 
+![Cat Facts WebApp Screenshot](readme-utils/AppScreen.png)
 
-## How to run
-First, ensure that you have **Java 17** and **npm** installed.
+## How to Run
+1. Ensure that **Java 17** and **npm** are installed on your system.
+2. Open a Bash terminal and navigate to the project directory.
+3. Run the Bash script with the following command:
 
-Next open a Bash terminal and navigate to the project folder.
-
-### For Windows Users:
-Run the following command:
 ```bash
 ./start_app.sh
 ```
-I have prepared a script that automatically starts the entire application!
 
-### For Other Operating Systems:
-Navigate to the server folder:
-```bash
-cd server
-```
+Make sure the server is running on port 8080 and the client on port 5173. Finally, open your browser and go to the front-end URL to access the application.
 
-Run the following command to start the back-end:
-```bash
-./mvnw spring-boot:run
-```
-Then, navigate to the client folder:
-```bash
-cd ../client
-```
-Run the front-end with:
-```bash
-npm run dev
-```
-Finally, open your browser on the appropriate port to access the application.
+## Conclusion
+This project was a great learning experience! I built the application using **Spring Boot** (Java) for the back-end and **React** (JavaScript)
+for the front-end, alongside **JUnit** and **Mockito** for testing. I chose these tools because I hadn't previously worked with **TypeScript** or **Kotlin**, but I am eager to learn them in the future. 
+
+Working on this app taught me a lot about **Server-Sent Events (SSE)** and **RxJS**. I’d be more than happy to discuss the development process, explain my design choices, and share why I approached certain challenges the way I did.
+
+
+
+
+
