@@ -33,10 +33,10 @@ public class CatFactsControllerTest {
 
     @Test
     public void testGetCatFacts() {
-        // Arrange
+        // Given
         when(catFactsService.fetchCatFacts()).thenReturn(Flux.just(fact1));
 
-        // Act
+        // When
         Flux<UserCatFactDto> result = webTestClient.get()
                 .uri("/cat-facts")
                 .exchange()
@@ -45,7 +45,7 @@ public class CatFactsControllerTest {
                 .returnResult(UserCatFactDto.class)
                 .getResponseBody();
 
-        // Assert
+        // Then
         StepVerifier.create(result)
                 .expectNextMatches(fact ->
                         fact.getUserName().equals("User") &&

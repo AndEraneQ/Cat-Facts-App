@@ -35,16 +35,16 @@ public class CatFactsServiceTest {
 
     @Test
     void fetchCatFacts_ShouldReturnUserCatFactDto() {
-        // Arrange
+        // Given
         Fact fact = new Fact("Cats are great!");
         User user = new User("John Doe");
         when(catFactFetcher.fetchRandomCatFact()).thenReturn(Mono.just(fact));
         when(userFetcher.fetchRandomUser()).thenReturn(Mono.just(user));
 
-        // Act
+        // When
         Flux<UserCatFactDto> result = catFactsService.fetchCatFacts().take(1);
 
-        // Assert
+        // Then
         StepVerifier.create(result)
                 .expectNextMatches(userCatFactDto ->
                         userCatFactDto.getUserName().equals("John Doe") &&
